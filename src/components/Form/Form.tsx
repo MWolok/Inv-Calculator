@@ -1,11 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import { FormValues } from "../model/FormValues";
 
-interface FormValues {
-	"current-savings": number;
-	"yearly-contribution": number;
-	"expected-return": number;
-	duration: number;
-}
+
 
 const initionalValues: FormValues = {
 	"current-savings": 1000,
@@ -36,7 +32,7 @@ const Form = (props:MyComponentProps)=>{
 		setValues((prevValues) => {
 			return {
 				...prevValues,
-				[ipnutname]: value.target.value,
+				[ipnutname]: +value.target.value,
 			};
 		});
 	};

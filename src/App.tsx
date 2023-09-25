@@ -1,32 +1,24 @@
 import React, { useState } from "react";
-import Header from "./components/Header/Header";
-import Form from "./components/Form/Form";
-import Table from "./components/Table/Table";
-interface FormValues {
-	"current-savings": number;
-	"yearly-contribution": number;
-	"expected-return": number;
-	duration: number;
-}
+import Header from "./components/header/Header";
+import Form from "./components/form/Form";
+import Table from "./components/table/Table";
+import { FormValues } from "./components/model/FormValues";
+import { YearlyData } from "./components/model/YearlyData";
 
-interface YearlyData {
-  year: number;
-  yearlyInterest: number;
-  savingsEndOfYear: number;
-  yearlyContribution: number;
-}
+
 
 function App() {
-const [result,setResult]= useState<YearlyData[]>();
-
+const [result,setResult]= useState<YearlyData[]|null>(null);
+const [currentSavings, setCurrentSavings] = useState<number>(0);
 
   const calculateHandler = (userInput: FormValues) => {
+    setCurrentSavings(userInput['current-savings']);
     const yearlyData: YearlyData[] =[];
 
-    let currentSavings: number = +userInput['current-savings'];
-    const yearlyContribution: number = +userInput['yearly-contribution'];
-    const expectedReturn: number = +userInput['expected-return'] / 100;
-    const duration: number = +userInput['duration'];
+    let currentSavings: number = userInput['current-savings'];
+    const yearlyContribution: number = userInput['yearly-contribution'];
+    const expectedReturn: number = userInput['expected-return'] / 100;
+    const duration: number = userInput['duration'];
 
     for (let i = 0; i < duration; i++) {
       const yearlyInterest: number = currentSavings * expectedReturn;
@@ -38,14 +30,17 @@ const [result,setResult]= useState<YearlyData[]>();
         yearlyContribution: yearlyContribution,
       });
     }
+  
   setResult(yearlyData);
+  console.log(result)
   }
 
 	return (
 		<>
 			<Header></Header>
 			<Form onCalculate={calculateHandler}></Form>
-			<Table></Table>
+      {result && 	<Table data={result} current={currentSavings}></Table>}
+		
 		</>
 	);
 }
